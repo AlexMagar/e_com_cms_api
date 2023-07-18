@@ -1,0 +1,41 @@
+@rootApi = http://localhost:8000
+
+@cmsApi = {{rootApi}}/api/v1/cms
+
+======== server test ========
+### get method
+GET {{rootApi}}
+
+========== cms ============
+### get cms
+GET {{cmsApi}}
+
+### post method
+POST {{cmsApi}}
+Content-Type: application/json
+
+{
+    "fName": "Ram",
+    "lName": "Smith",
+    "phone": "0987654321",
+    "address": "Sydney",
+    "email": "ram@email.com",
+    "password": "123454321"
+}
+
+### put mthod
+PUT {{cmsApi}}
+Content-Type: application/json
+
+{
+
+}
+
+### Delete method
+DELETE {{cmsApi}}
+Content-Type: application/json
+
+{
+
+}
+
