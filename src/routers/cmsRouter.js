@@ -22,8 +22,7 @@ router.get("/", async (req, res) =>{
 router.post("/", async (req, res) =>{
 
     try {
-        const result = req.body;
-        const rst = await addCmsAdmin(result);
+        const rst = await addCmsAdmin(req.body);
         res.json({
             status: "success",
             message: "From cms post method",
