@@ -1,6 +1,6 @@
-@rootApi = http://localhost:8000
+@rootApi = http://localhost:8000/api/v1
 
-@cmsApi = {{rootApi}}/api/v1/cms
+@adminApi = {{rootApi}}/admin
 
 ======== server test ========
 ### get method
@@ -8,23 +8,23 @@ GET {{rootApi}}
 
 ========== cms ============
 ### get cms
-GET {{cmsApi}}
+GET {{adminApi}}
 
 ### post method
-POST {{cmsApi}}
+POST {{adminApi}}
 Content-Type: application/json
 
 {
-    "fName": "Ram",
-    "lName": "Smith",
+    "fName": "Laxman",
+    "lName": "Magar",
     "phone": "0987654321",
-    "address": "Sydney",
-    "email": "ram@email.com",
-    "password": "123454321"
+    "address": "Brisbane",
+    "email": "laxman@email.com",
+    "password": "qwertyuiop"
 }
 
 ### put mthod
-PUT {{cmsApi}}
+PUT {{adminApi}}
 Content-Type: application/json
 
 {
@@ -32,7 +32,7 @@ Content-Type: application/json
 }
 
 ### Delete method
-DELETE {{cmsApi}}
+DELETE {{adminApi}}
 Content-Type: application/json
 
 {
