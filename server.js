@@ -4,7 +4,7 @@ import morgan from 'morgan'
 import dotenv from 'dotenv'
 dotenv.config();
 import mongoConnect from './src/config/mongoConfig.js'
-import cmsRouter from './src/routers/cmsRouter.js'
+import adminRouter from './src/routers/adminRouter.js'
 
 const PORT = process.env.PORT || 8000
 
@@ -20,7 +20,7 @@ app.use(morgan('dev'))
 
 
 //apis
-app.use("/api/v1/cms", cmsRouter)
+app.use("/api/v1/admin", adminRouter)
 
 // default apis
 app.use("/", (req, res) =>{
@@ -30,6 +30,13 @@ app.use("/", (req, res) =>{
     })
 })
 
+app.use((error, req, res, next) =>{
+    const code = error.statusCode || 500;
+    res.status(code).json({
+        status: "error",
+        message: error.message
+    })
+})
 
 // PORT listen
 app.listen(PORT, (err) =>{
