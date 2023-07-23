@@ -26,3 +26,27 @@ export const newAdminValidation = (req, res, next) =>{
         next(error)
     }
 }
+
+
+export const newAdminVerificationValidation = (req, res, next) =>{
+    try {
+        //define the schema
+        const schema = Joi.object({
+            email: Joi.string().email({minDomainSegments: 2}).required(),
+            code: Joi.string().required(),
+        })
+
+        const { error} = schema.validate(req.body)
+
+        //check data against the rule
+        error ? res.json({
+            status: 'error',
+            message:error.message
+        })
+        : next()
+
+    } catch (error) {
+        next(error)
+    }
+}
+

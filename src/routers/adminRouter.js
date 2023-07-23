@@ -1,6 +1,6 @@
 import express from 'express'
 import { hashPassword } from "../utils/bcrypt.js";
-import { newAdminValidation } from "../middleware/joiValidation.js";
+import { newAdminValidation, newAdminVerificationValidation } from "../middleware/joiValidation.js";
 import { insertAdmin } from "../modles/cms/AdminModel.js";
 import { accountVerificationEmail } from "../utils/nodeMailer.js";
 import { v4 as uuidv4 } from 'uuid';
@@ -24,7 +24,6 @@ router.post("/",newAdminValidation, async (req, res, next) =>{
             res.json({
                 status: "success",
                 message: "Please check your email and follow the instruction to activate your account",
-                result
             })
 
             const link = `${process.env.WEB_DOMAIN}/admin-verification?c=${result.verificationCode}&e=${result.email}`
@@ -50,4 +49,26 @@ router.post("/",newAdminValidation, async (req, res, next) =>{
         next(error)
     }
 })
+
+/// verify the new account
+router.post("/admin-verification", newAdminVerificationValidation, async (req, res, next) =>{
+    try {
+        const {email, code} = req.body;
+        const filter= {
+            email: email,
+            verificationCode: code
+        }
+        const updateObj = {
+            isVerified: true,
+            verificationCode: ""
+        }
+        const result = await updateAdmin(filter, updateObj)
+
+        console.log(result)
+    } catch (error) {
+        next(error)
+    }
+})
+
+
 export default router;
