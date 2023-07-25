@@ -1,6 +1,7 @@
 import Joi from 'joi'
 
 const SHORTSTR = Joi.string().min(3).max(100)
+const  SHORTSTRREQ = Joi.string().min(3).max(100).required();
 export const newAdminValidation = (req, res, next) =>{
     try {
         //define the schema

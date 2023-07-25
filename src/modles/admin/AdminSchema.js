@@ -45,4 +45,4 @@ const adminSchema = new mongoose.Schema({
 }
 )
 
-export default mongoose.model("Admin", adminSchema) //this will make cms-admins
+export default mongoose.model("Admin", adminSchema) //this will make admins

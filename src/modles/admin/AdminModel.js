@@ -14,10 +14,8 @@ export const updateAdminById = ({_id, ...rest}) =>{
 }
 
 //@filter and @updateObj must ne an obj
-export const updateAdmin = ({filter, updateObj}) =>{
-    return AdminSchema.findOneAndUpdate(filter, updateObj, {
-        new: true
-    });
+export const updateAdmin = (filter, updateObj) =>{
+    return AdminSchema.findOneAndUpdate(filter, updateObj, {new: true});
 }
 
 export const deleteAdmin = (_id) =>{
