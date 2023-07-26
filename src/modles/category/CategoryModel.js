@@ -4,7 +4,7 @@ export const insertCategory = (obj) =>{
     return CategorySchema(obj).save();
 }
 
-export const getCategory = () =>{
+export const getCategories = () =>{
     return CategorySchema.find()
 }
 
