@@ -63,7 +63,7 @@ export const accountVerifiedNotification = async (obj) =>{
         text: `hello ${fName}, Your account has been verified you may signin now `, //plain text body
         html: `
         <p> Hello ${fName}</p>
-        <p>Your account has been verified, you may <a href='${process.env.WEB_DOMAIN}'>sign</a> in now  </p> 
+        <p>Your account has been verified, you may <a href='${process.env.WEB_DOMAIN +"/login"}'>sign</a> in now  </p> 
         <br />
         <br />
 
