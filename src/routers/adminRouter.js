@@ -1,7 +1,7 @@
 import express, { json } from 'express'
-import { hashPassword } from "../utils/bcrypt.js";
+import { compairPassword, hashPassword } from "../utils/bcrypt.js";
 import { newAdminValidation, newAdminVerificationValidation } from "../middleware/joiValidation.js";
-import { insertAdmin, updateAdmin } from "../modles/admin/AdminModel.js"
+import { getAdminByEmail, insertAdmin, updateAdmin } from "../modles/admin/AdminModel.js"
 import { accountVerificationEmail, accountVerifiedNotification } from "../utils/nodeMailer.js";
 import { v4 as uuidv4 } from 'uuid';
 
@@ -49,6 +49,49 @@ router.post("/",newAdminValidation, async (req, res, next) =>{
         next(error)
     }
 })
+
+
+//check admin login 
+router.post("/login", async (req, res, next) =>{
+    try {
+        //get the data from login form 
+        const {email, password} = req.body;
+
+        console.log("Email: ",email, "Password: ",password)
+
+        //check if user exit with received email and get user from db
+
+        const user = await getAdminByEmail(email);
+
+        if(user?._id){
+            console.log("User found")
+
+            //use bcrypt to check if the pw is matching
+            const isMatch = compairPassword(password, user.password)
+            
+            if(isMatch){
+                user.password = undefined
+                // const {password, ...rest} = user;
+                return res.json({
+                    status: "Success",
+                    message: "Logedin Successfully",
+                    user
+                })
+            }
+        }
+        res.json({
+            status: "Error",
+            message: "Invalid Credentials"
+        })
+
+    } catch (error) {
+        res.json({
+            status: "error",
+            message: error.message
+        })
+    }
+})
+
 
 /// verify the new account
 router.post("/admin-verification", newAdminVerificationValidation, async (req, res, next) =>{
