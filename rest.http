@@ -2,12 +2,14 @@
 
 @adminApi = {{rootApi}}/admin
 
+@categoryApi = {{rootApi}}/category
+
 ======== server test ========
 ### get method
 GET {{rootApi}}
 
-========== cms ============
-### get cms
+========== admin ============
+### get admin
 GET {{adminApi}}
 
 ### post method
@@ -39,3 +41,15 @@ Content-Type: application/json
 
 }
 
+
+============= category ===========
+###get category
+GET {{categoryApi}}
+
+### POST category
+POST {{categoryApi}}
+Content-Type: application/json
+
+{
+    "title": "Mobile Devices"
+}
