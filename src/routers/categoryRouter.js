@@ -41,6 +41,7 @@ router.post("/", async (req, res, next) =>{
             ? res.json({
                 status: "success",
                 message: "New category has been added",
+                result
             })
             : res.json({
                 status: "error",
