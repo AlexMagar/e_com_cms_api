@@ -60,7 +60,6 @@ router.post("/login", async (req, res, next) =>{
         console.log("Email: ",email, "Password: ",password)
 
         //check if user exit with received email and get user from db
-
         const user = await getAdminByEmail(email);
 
         if(user?._id){
