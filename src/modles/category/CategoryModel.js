@@ -17,6 +17,6 @@ export const updateCategory = (filter, updateObj) =>{
     return CategorySchema.findOneAndUpdate(filter, updateObj, {new: true})
 }
 
-export const deleteCategory = (_id) =>{
+export const deleteCategoryById = (_id) =>{
     return CategorySchema.findByIdAndDelete(_id);
 }

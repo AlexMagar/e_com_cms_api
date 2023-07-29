@@ -1,6 +1,7 @@
 import express from 'express'
-import { getCategories, insertCategory } from "../modles/category/CategoryModel.js";
+import { getCategories, insertCategory, updateCategoryByID, deleteCategoryById } from "../modles/category/CategoryModel.js";
 import slugify from "slugify";
+import { upadteCategoryValidation } from "../middleware/joiValidation.js";
 
 const router = express.Router();
 
@@ -53,6 +54,48 @@ router.post("/", async (req, res, next) =>{
             error.statusCode = 200;
             error.message = "The slug for the category already exist, please change the catgegory name ans try again.";
         }
+        next(error)
+    }
+})
+
+router.put("/", upadteCategoryValidation,  async (req, res, next) =>{
+    try {
+        const result = await updateCategoryByID(req.body)
+
+        result?._id
+            ? res.json({
+                status: "success",
+                message: "New category has been added",
+            })
+            : res.json({
+                status: "error",
+                message: "Error, unable to add new category"
+            })
+
+    } catch (error) {
+        next(error)
+    }
+})
+
+router.delete("/:_id", async (req, res, next) =>{
+    const {_id} = req.params
+
+    try {
+        if(_id){
+            const result = await deleteCategoryById(_id)
+            result?._id && 
+            res.json({
+                status: "success",
+                message: "The category has been deleted"
+            })
+            return
+        }
+
+        res.json({
+            status: "error",
+            message: "Error, unable to process your request"
+        })
+    } catch (error) {
         next(error)
     }
 })
