@@ -10,6 +10,19 @@ import { auth } from '../middleware/authMiddleware.js';
 
 const router = express.Router();
 
+//get admin details
+router.get("/", auth, (req, res, next) =>{
+    try {
+        res,json({
+            status: "success",
+            message: " here is the user Info",
+            user: req.userInfo,
+        })
+    } catch (error) {
+        next(error)
+    }
+})
+
 //create new admin api
 router.post("/", auth, newAdminValidation, async (req, res, next) =>{
 
@@ -52,7 +65,6 @@ router.post("/", auth, newAdminValidation, async (req, res, next) =>{
         next(error)
     }
 })
-
 
 //check admin login 
 router.post("/login", loginValidation, async (req, res, next) =>{
@@ -99,7 +111,6 @@ router.post("/login", loginValidation, async (req, res, next) =>{
     }
 })
 
-
 /// verify the new account
 router.post("/admin-verification", newAdminVerificationValidation, async (req, res, next) =>{
     try {
@@ -132,5 +143,19 @@ router.post("/admin-verification", newAdminVerificationValidation, async (req, r
         next(error)
     }
 })
+
+//return the refreshJWT
+router.get("/", refreshAuth, (req, res, next) =>{
+    try {
+        res,json({
+            status: "success",
+            message: " here is the user Info",
+            user: req.userInfo,
+        })
+    } catch (error) {
+        next(error)
+    }
+})
+
 
 export default router;
