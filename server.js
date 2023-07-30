@@ -6,6 +6,7 @@ dotenv.config();
 import mongoConnect from './src/config/mongoConfig.js'
 import adminRouter from './src/routers/adminRouter.js'
 import categoryRouter from "./src/routers/categoryRouter.js";
+import { auth } from './src/middleware/authMiddleware.js';
 
 const PORT = process.env.PORT || 8000
 
@@ -22,7 +23,7 @@ app.use(morgan('dev'))
 
 //apis
 app.use("/api/v1/admin", adminRouter)
-app.use("/api/v1/category", categoryRouter);
+app.use("/api/v1/category", auth, categoryRouter);
 
 // default apis
 app.use("/", (req, res) =>{

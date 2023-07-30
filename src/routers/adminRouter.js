@@ -5,12 +5,13 @@ import { getAdminByEmail, insertAdmin, updateAdmin } from "../modles/admin/Admin
 import { accountVerificationEmail, accountVerifiedNotification } from "../utils/nodeMailer.js";
 import { v4 as uuidv4 } from 'uuid';
 import { createAcessJWT, createRefreshJWT } from "../utils/jwt.js";
+import { auth } from '../middleware/authMiddleware.js';
 
 
 const router = express.Router();
 
 //create new admin api
-router.post("/",newAdminValidation, async (req, res, next) =>{
+router.post("/", auth, newAdminValidation, async (req, res, next) =>{
 
     try {
         const {password} = req.body;

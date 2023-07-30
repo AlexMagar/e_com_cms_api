@@ -3,7 +3,7 @@ import { updateAdmin } from '../modles/admin/AdminModel.js'
 
 export const createAcessJWT = async (email) =>{
     const token =  jwt.sign({email}, process.env.JWT_ACCESS_SECRET, {
-        expiresIn: "1m"
+        expiresIn: "15m"
     })
     await insertSession({token, associate: email})
 
@@ -17,4 +17,8 @@ export const createRefreshJWT = async (email) =>{
     const dt = await updateAdmin({email}, {refreshJWT})
 
     return refreshJWT
+}
+
+export const verifyAccessJWT = token => {
+    return jwt.decode(token, process.env.JWT_ACCESS_SECRET);
 }

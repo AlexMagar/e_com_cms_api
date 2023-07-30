@@ -41,7 +41,6 @@ Content-Type: application/json
 
 }
 
-
 ============= category ===========
 ###get category
 GET {{categoryApi}}
@@ -52,4 +51,33 @@ Content-Type: application/json
 
 {
     "title": "Mobile Devices For Apple"
+}
+
+========== login ============
+### get admin
+GET {{rootApi}}/login
+
+### post method
+POST {{rootApi}}/login
+Content-Type: application/json
+
+{
+    "email": "laxman@email.com",
+    "password": "qwertyuiop"
+}
+
+### put mthod
+PUT {{rootApi}}/login
+Content-Type: application/json
+
+{
+
+}
+
+### Delete method
+DELETE {{rootApi}}/login
+Content-Type: application/json
+
+{
+
 }
