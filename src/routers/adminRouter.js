@@ -1,11 +1,12 @@
 import express, { json } from 'express'
 import { compairPassword, hashPassword } from "../utils/bcrypt.js";
 import { newAdminValidation, newAdminVerificationValidation, loginValidation } from "../middleware/joiValidation.js";
-import { getAdminByEmail, insertAdmin, updateAdmin } from "../modles/admin/AdminModel.js"
+import { getAdminByEmail, insertAdmin, updateAdmin, updateAdminById } from "../modles/admin/AdminModel.js"
 import { accountVerificationEmail, accountVerifiedNotification } from "../utils/nodeMailer.js";
 import { v4 as uuidv4 } from 'uuid';
 import { createAcessJWT, createRefreshJWT } from "../utils/jwt.js";
 import { auth } from '../middleware/authMiddleware.js';
+import { deleteSession } from '../modles/session/SessionModel.js';
 
 
 const router = express.Router();
@@ -152,6 +153,24 @@ router.get("/", refreshAuth, (req, res, next) =>{
             message: " here is the user Info",
             user: req.userInfo,
         })
+    } catch (error) {
+        next(error)
+    }
+})
+
+//logout
+router.post("/logout", async (req, res, next)=>{
+    try {
+        const {accessJWT, refreshJWT} = req.body
+
+        accessJWT && deleteSession(accessJWT);
+        if(refreshJWT && _id) {
+            const data = await updateAdminById({_id, refreshJWT:""})
+        }
+        res.json({
+            status: "success"
+        })
+
     } catch (error) {
         next(error)
     }
