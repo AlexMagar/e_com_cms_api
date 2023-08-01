@@ -1,5 +1,5 @@
-import { getAdminByEmail } from "../modles/admin/AdminModel.js"
-import { verifyAccessJWT } from "../utils/jwt.js"
+import { getAdminByEmail,getOneAdmin } from "../modles/admin/AdminModel.js"
+import { createAcessJWT, verifyAccessJWT, verifyRefreshJWT } from "../utils/jwt.js"
 
 
 export const auth = async (req, res, next) =>{
@@ -16,7 +16,7 @@ export const auth = async (req, res, next) =>{
         //3. extract the email and get user by email
         if(decoded?.email){
             //4. check if user is active
-            const user = await getAdminByEmail(decoded?.email)
+            const user = await getAdminByEmail(decoded.email)
             console.log(user)
 
             if(user?._id && user?.status === "active"){
@@ -49,11 +49,9 @@ export const refreshAuth = async (req, res, next) =>{
           //1. get the accessJWT
           const {authorization} = req.headers
           console.log(authorization)
-
-
   
           //2. decode the jwt
-          const decoded = verifyAccessJWT(authorization)
+          const decoded = verifyRefreshJWT(authorization)
           console.log(decoded)
 
           //make sure data is in 
@@ -61,14 +59,20 @@ export const refreshAuth = async (req, res, next) =>{
           //3. extract the email and get user by email
           if(decoded?.email){
               //4. check if user is active
-              const user = await getAdminByEmail(decoded?.email)
+              const user = await getOneAdmin({
+                email: decoded.email,
+                refreshJWT: authorization
+            })
               console.log(user)
   
               if(user?._id && user?.status === "active"){
-                  user.refreshJWT = undefined
-                  user.password = undefined
-                  req.userInfo = user
-                  return next();
+                //create new accessJWT
+                const accessJWT = await createAcessJWT(decoded.email)
+                  
+                return res.json({
+                    status: 'success',
+                    accessJWT
+                })
               }
           }
           res.status(401).json({
