@@ -146,17 +146,7 @@ router.post("/admin-verification", newAdminVerificationValidation, async (req, r
 })
 
 //return the refreshJWT
-router.get("/", refreshAuth, (req, res, next) =>{
-    try {
-        res,json({
-            status: "success",
-            message: " here is the user Info",
-            user: req.userInfo,
-        })
-    } catch (error) {
-        next(error)
-    }
-})
+router.get("/get-accessjwt", refreshAuth)
 
 //logout
 router.post("/logout", async (req, res, next)=>{
