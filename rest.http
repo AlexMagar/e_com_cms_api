@@ -44,6 +44,7 @@ Content-Type: application/json
 ============= category ===========
 ###get category
 GET {{categoryApi}}
+Authorization: : eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImFAYS5jb20iLCJpYXQiOjE2OTA2NzcxODQsImV4cCI6MTY5MDY3ODA4NH0.hzlnYlaj1EFU-g9ZTyYX1CyR_yVQmtEqVdh3kj5d_3I
 
 ### POST category
 POST {{categoryApi}}
@@ -54,6 +55,7 @@ Content-Type: application/json
 }
 
 ========== login ============
+
 ### get admin
 GET {{rootApi}}/login
 
