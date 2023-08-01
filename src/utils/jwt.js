@@ -1,5 +1,6 @@
 import jwt from 'jsonwebtoken'
 import { updateAdmin } from '../modles/admin/AdminModel.js'
+import { insertSession } from '../modles/session/SessionModel.js'
 
 export const createAcessJWT = async (email) =>{
     const token =  jwt.sign({email}, process.env.JWT_ACCESS_SECRET, {
@@ -20,5 +21,9 @@ export const createRefreshJWT = async (email) =>{
 }
 
 export const verifyAccessJWT = token => {
-    return jwt.decode(token, process.env.JWT_ACCESS_SECRET);
+    return jwt.verify(token, process.env.JWT_ACCESS_SECRET);
+}
+
+export const verifyRefreshJWT = (token) => {
+    return jwt.verify(token, process.env.JWT_REFRESH_SECRET);
 }
