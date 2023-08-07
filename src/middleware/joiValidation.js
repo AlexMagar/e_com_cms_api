@@ -99,3 +99,29 @@ export const upadteCategoryValidation = (req, res, next) =>{
         next(error)
     }
 }
+
+
+// ============== paymenyt options ============== 
+
+export const newPOValidation = (req, res, next) =>{
+    try {
+        //define the schema
+        const schema = Joi.object({
+            status: Joi.string().email({minDomainSegments: 2}).required(),
+            title: Joi.string().required(),
+            description: Joi.string().required(),
+        })
+
+        const { error} = schema.validate(req.body)
+
+        //check data against the rule
+        error ? res.json({
+            status: 'error',
+            message:error.message
+        })
+        : next()
+
+    } catch (error) {
+        next(error)
+    }
+}
