@@ -4,11 +4,11 @@
 
 @categoryApi = {{rootApi}}/category
 
-======== server test ========
+# ======== server test ========
 ### get method
 GET {{rootApi}}
 
-========== admin ============
+# ========== admin ============
 ### get admin
 GET {{adminApi}}
 
@@ -41,7 +41,7 @@ Content-Type: application/json
 
 }
 
-============= category ===========
+# ============= category ===========
 ###get category
 GET {{categoryApi}}
 Authorization: : eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImFAYS5jb20iLCJpYXQiOjE2OTA2NzcxODQsImV4cCI6MTY5MDY3ODA4NH0.hzlnYlaj1EFU-g9ZTyYX1CyR_yVQmtEqVdh3kj5d_3I
@@ -54,7 +54,7 @@ Content-Type: application/json
     "title": "Mobile Devices For Apple"
 }
 
-========== login ============
+# ========== login ============
 
 ### get admin
 GET {{rootApi}}/login
@@ -81,5 +81,22 @@ DELETE {{rootApi}}/login
 Content-Type: application/json
 
 {
+
+}
+
+
+# =========== post new payment option ======= 
+
+### get all PO
+
+
+### post new PO
+POST {{rootApi}}/payment-option
+Content-Type: application/json
+
+{
+    "status":"inactive",
+    "title": "Pay by Bank Transfer",
+    "description": "Please do EFT to the ............ Thank you!!"
 
 }
