@@ -107,12 +107,12 @@ export const newPOValidation = (req, res, next) =>{
     try {
         //define the schema
         const schema = Joi.object({
-            status: Joi.string().email({minDomainSegments: 2}).required(),
-            title: Joi.string().required(),
-            description: Joi.string().required(),
+            status: SHORTSTRREQ,
+            title: SHORTSTRREQ,
+            description: SHORTSTRREQ,
         })
 
-        const { error} = schema.validate(req.body)
+        const { error } = schema.validate(req.body)
 
         //check data against the rule
         error ? res.json({

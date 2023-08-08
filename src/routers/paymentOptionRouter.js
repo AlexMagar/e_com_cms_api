@@ -4,7 +4,7 @@ import { newPOValidation } from '../middleware/joiValidation.js';
 
 const router = express.Router();
 
-router.get("/", newPOValidation, async (req, res, next) =>{
+router.get("/", async (req, res, next) =>{
     try {
         const result = await getPOs();
 
