@@ -8,12 +8,16 @@ export const getProducts = () =>{
     return ProductSchema.find()
 }
 
-export const updateProductByID = ({_id, ...rest}) =>{
-    return ProductSchema.findByIdAndUpdate(_id, rest)
+export const getProductById = (_id) =>{
+    return ProductSchema.findById(_id)
 }
 
 export const findOneProductByFilter = (filter) =>{
     return ProductSchema.findOne(filter)
+}
+
+export const updateProductByID = ({_id, ...rest}) =>{
+    return ProductSchema.findByIdAndUpdate(_id, rest)
 }
 
 //@filter, @updateobj must be an obj

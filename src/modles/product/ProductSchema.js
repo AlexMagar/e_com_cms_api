@@ -9,6 +9,7 @@ const productSchema = new mongoose.Schema(
         name: {
             type: String,
             required: true,
+            maxLenght: 150,
         },
         parentCat: {
             type: mongoose.Types.ObjectId,
@@ -48,6 +49,10 @@ const productSchema = new mongoose.Schema(
         description: {
             type: String,
             required: true,
+        },
+        thumbnail: {
+            type: String,
+            required: true
         },
         images: [
             {

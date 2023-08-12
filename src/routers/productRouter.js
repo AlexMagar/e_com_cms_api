@@ -1,6 +1,6 @@
 import express from 'express'
-import { deleteProductById, getProducts, insertProduct } from '../modles/product/ProductModel';
-import { newProductValidation } from '../middleware/joiValidation';
+import { deleteProductById, getProductById, getProducts, insertProduct } from '../modles/product/ProductModel.js';
+import { newProductValidation } from '../middleware/joiValidation.js';
 import slugify from 'slugify';
 import multer from 'multer';
 
@@ -19,7 +19,6 @@ const storage = multer.diskStorage({
 
         //construct or rename file name
         const fullFileName =  Date.now() + "-" + file.originalname
-        file.mimetype
         cb(error, fullFileName )
     }
 })
@@ -27,9 +26,11 @@ const upload = multer({storage})
 //where do you want to store the file
 //what name do you wnat to give to
 
-router.get("/", async (req, res, next) =>{
+router.get("/:_id?", async (req, res, next) =>{
     try {
-        const products = await getProducts();
+
+        const { _id} = req.params;
+        const products = _id ? await getProductById(_id) : getProducts(); 
 
         res.json({
             status: "success",
@@ -47,7 +48,7 @@ router.post("/", upload.array("images", 5),  newProductValidation, async (req, r
 
         if(req.files.length){
             req.body.images = req.files.map( item => item.path)
-            // req.body.thumbnail
+            req.body.thumbnail = req.body.images[0]
         }
 
         req.body.slug = slugify(req.body.name, {trim: true, lower: true})
@@ -67,8 +68,7 @@ router.post("/", upload.array("images", 5),  newProductValidation, async (req, r
     } catch (error) {
         if (error.message.includes("E11000 duplicate key error collection")) {
             error.statusCode = 200;
-            error.message =
-              "The product slug or sku alread related to another product, change name and sku and try agin later.";
+            error.message = "The product slug or sku alread related to another product, change name and sku and try agin later.";
           }
       
         next(next)
@@ -86,7 +86,6 @@ router.delete("/:_id", async (req, res, next) =>{
         ? res.json({
             status: "success",
             message: "Here are the Producd has been deleted successfully",
-            result,
         })
         : res.json({
             status: "error",
@@ -95,7 +94,7 @@ router.delete("/:_id", async (req, res, next) =>{
         })
 
     } catch (error) {
-        next(next)
+        next(error)
     }
 })
 

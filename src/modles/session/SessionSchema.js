@@ -1,13 +1,14 @@
 import mongoose from "mongoose";
 
 const sessionSchema = new mongoose.Schema({
-    toekn:{
+    token:{
         type: String,
         required: true
     },
     assoiciate:{
         type: String,
         required: true,
+        default: "",
     }
 },
 {

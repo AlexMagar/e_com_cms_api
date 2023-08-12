@@ -10,12 +10,12 @@ export const newAdminValidation = (req, res, next) =>{
     try {
         //define the schema
         const schema = Joi.object({
-            fName: SHORTSTR,
-            lName: SHORTSTR,
-            email: Joi.string().email({minDomainSegments: 2}).required(),
-            phone: Joi.string().required(),
-            address: Joi.string().allow(""),
-            password: Joi.string().required().min(6)
+            fName: SHORTSTRREQ,
+            lName: SHORTSTRREQ,
+            email: SHORTSTR.email({minDomainSegments: 2}).required(),
+            phone: SHORTSTRREQ,
+            address:SHORTSTR.allow(""),
+            password:SHORTSTRREQ.min(6)
         })
 
         const { error} = schema.validate(req.body)
@@ -36,8 +36,8 @@ export const loginValidation = (req, res, next) =>{
     try {
         //define the schema
         const schema = Joi.object({
-            email: Joi.string().email({minDomainSegments: 2}).required(),
-            password: Joi.string().required().min(6)
+            email: SHORTSTR.email({minDomainSegments: 2}).required(),
+            password: SHORTSTRREQ.min(6)
         })
 
         const { error} = schema.validate(req.body)
@@ -59,8 +59,8 @@ export const newAdminVerificationValidation = (req, res, next) =>{
     try {
         //define the schema
         const schema = Joi.object({
-            email: Joi.string().email({minDomainSegments: 2}).required(),
-            code: Joi.string().required(),
+            email: SHORTSTRREQ.email({minDomainSegments: 2}).required(),
+            code: SHORTSTRREQ,
         })
 
         const { error} = schema.validate(req.body)
@@ -84,8 +84,9 @@ export const upadteCategoryValidation = (req, res, next) =>{
     try {
         //define the schema
         const schema = Joi.object({
-            email: Joi.string().email({minDomainSegments: 2}).required(),
-            code: Joi.string().required(),
+            _id: SHORTSTRREQ,
+            title: SHORTSTRREQ,
+            status: SHORTSTRREQ,
         })
 
         const { error} = schema.validate(req.body)
@@ -127,6 +128,29 @@ export const newPOValidation = (req, res, next) =>{
         next(error)
     }
 }
+export const updatePOValidation = (req, res, next) =>{
+    try {
+        //define the schema
+        const schema = Joi.object({
+            _id: SHORTSTRREQ,
+            status: SHORTSTRREQ,
+            title: SHORTSTRREQ,
+            description: SHORTSTRREQ,
+        })
+
+        const { error } = schema.validate(req.body)
+
+        //check data against the rule
+        error ? res.json({
+            status: 'error',
+            message:error.message
+        })
+        : next()
+
+    } catch (error) {
+        next(error)
+    }
+}
 
 // ========= Product Validation =======
 
@@ -136,16 +160,16 @@ export const newProductValidation = (req, res, next) =>{
         req.body.salesPrice = req.body.salesPrice || 0;
         
         const schema = Joi.object({
-            name: SHORTSTRREQ,
-            sku: SHORTSTRREQ,
-            parentCat: SHORTSTRREQ,
             status: SHORTSTRREQ,
-            salesPrice: NUM,
+            name: SHORTSTRREQ,
+            parentCat: SHORTSTRREQ, 
+            sku: SHORTSTRREQ,
             price: NUMREQ,
             qty: NUMREQ,
-            description: SHORTSTRREQ,
+            salesPrice: NUM,
+            description: LONGTSTR,
+            salesStartDate: SHORTSTR.allow("", null),
             salesEndDate: SHORTSTR.allow("", null),
-            salesStartDate: SHORTSTR.allow("", null)
         })
 
         const { error } = schema.validate(req.body)

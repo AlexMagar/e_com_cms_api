@@ -13,6 +13,8 @@ export const auth = async (req, res, next) =>{
         const decoded = verifyAccessJWT(authorization)
         console.log(decoded)
 
+        //2a TODO make sure token exist in database
+
         //3. extract the email and get user by email
         if(decoded?.email){
             //4. check if user is active

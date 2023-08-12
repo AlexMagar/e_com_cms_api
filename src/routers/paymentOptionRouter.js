@@ -1,6 +1,6 @@
 import express from 'express'
-import { getPOs, insertPO } from '../modles/payment-option/PaymentModel.js';
-import { updatePOValidation } from "../middleware/joiValidation.js";
+import { deletePO, getPOs, insertPO, updatePOById } from '../modles/payment-option/PaymentModel.js';
+import { newPOValidation, updatePOValidation } from "../middleware/joiValidation.js";
 
 const router = express.Router();
 
@@ -20,7 +20,7 @@ router.get("/", async (req, res, next) =>{
 })
 
 
-router.post("/", async (req, res, next) =>{
+router.post("/", newPOValidation, async (req, res, next) =>{
     try {
 
         const result = await insertPO(req.body)
@@ -29,7 +29,6 @@ router.post("/", async (req, res, next) =>{
             ? res.json({
                 status: "success",
                 message: "New Payment method has been added",
-                result
             })
             : res.json({
                 status: "error",
@@ -43,7 +42,7 @@ router.post("/", async (req, res, next) =>{
 
 router.put("/", updatePOValidation,  async (req, res, next) =>{
     try {
-        const result = await updateCategoryByID(req.body)
+        const result = await updatePOById(req.body)
 
         result?._id
             ? res.json({
@@ -65,7 +64,7 @@ router.delete("/:_id", async (req, res, next) =>{
 
     try {
         if(_id){
-            const result = await deleteCategoryById(_id)
+            const result = await deletePO(_id)
             result?._id && 
             res.json({
                 status: "success",

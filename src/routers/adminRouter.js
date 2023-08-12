@@ -7,6 +7,7 @@ import { v4 as uuidv4 } from 'uuid';
 import { createAcessJWT, createRefreshJWT } from "../utils/jwt.js";
 import { auth, refreshAuth } from '../middleware/authMiddleware.js';
 import { deleteSession } from '../modles/session/SessionModel.js';
+import { token } from 'morgan';
 
 
 const router = express.Router();
@@ -14,7 +15,7 @@ const router = express.Router();
 //get admin details
 router.get("/", auth, (req, res, next) =>{
     try {
-        res,json({
+        res.json({
             status: "success",
             message: " here is the user Info",
             user: req.userInfo,
@@ -67,51 +68,6 @@ router.post("/", auth, newAdminValidation, async (req, res, next) =>{
     }
 })
 
-//check admin login 
-router.post("/login", loginValidation, async (req, res, next) =>{
-    try {
-        //get the data from login form 
-        const {email, password} = req.body;
-
-        //check if user exit with received email and get user from db
-        const user = await getAdminByEmail(email);
-
-
-        if(user?._id){
-            console.log("User found")
-
-            //use bcrypt to check if the pw is matching
-            const isMatch = compairPassword(password, user.password)
-
-            if(isMatch){
-                user.password = undefined
-                // const {password, ...rest} = user;
-
-                //create two jwts: 
-                const accessJWT = await createAcessJWT(email)
-                const refreshJWT = await createRefreshJWT(email)
-                // create accessJWT and store in session table: short live 15
-                // create accessJWT / refereshJWT ans store with user data in user table : long live 30d
-                return res.json({
-                    status: "Success",
-                    message: "Logedin Successfully",
-                    token: {accessJWT, refreshJWT}
-                })
-            }
-        }
-        res.json({
-            status: "Error",
-            message: "Invalid Credentials"
-        })
-
-    } catch (error) {
-        res.json({
-            status: "error",
-            message: error.message
-        })
-    }
-})
-
 /// verify the new account
 router.post("/admin-verification", newAdminVerificationValidation, async (req, res, next) =>{
     try {
@@ -145,17 +101,65 @@ router.post("/admin-verification", newAdminVerificationValidation, async (req, r
     }
 })
 
+//check admin login 
+router.post("/login", loginValidation, async (req, res, next) =>{
+    try {
+
+        console.log("Admin Router: ",req.body)
+        //get the data from login form 
+        const {email, password} = req.body;
+
+        //check if user exit with received email and get user from db
+        const user = await getAdminByEmail(email);
+
+
+        if(user?._id){
+            console.log("User found")
+
+            //use bcrypt to check if the pw is matching
+            const isMatch = compairPassword(password, user.password)
+
+            console.log("admin router, ", isMatch)
+
+            if(isMatch){
+                // user.password = undefined
+                // const {password, ...rest} = user;
+
+                //create two jwts: 
+                const accessJWT = await createAcessJWT(email)
+                const refreshJWT = await createRefreshJWT(email)
+
+                console.log("admin Router, login", accessJWT, refreshJWT)
+                // create accessJWT and store in session table: short live 15
+                // create accessJWT / refereshJWT ans store with user data in user table : long live 30d
+                return res.json({
+                    status: "Success",
+                    message: "Logedin Successfully",
+                    token: {accessJWT, refreshJWT}
+                })
+            }
+        }
+        res.json({
+            status: "Error",
+            message: "Invalid Credentials"
+        })
+
+    } catch (error) {
+        next(error)
+    }
+})
+
 //return the refreshJWT
 router.get("/get-accessjwt", refreshAuth)
 
 //logout
 router.post("/logout", async (req, res, next)=>{
     try {
-        const {accessJWT, refreshJWT} = req.body
+        const {accessJWT, refreshJWT, _id} = req.body
 
         accessJWT && deleteSession(accessJWT);
         if(refreshJWT && _id) {
-            const data = await updateAdminById({_id, refreshJWT:""})
+            const data = await updateAdminById({_id, refreshJWT: ""})
         }
         res.json({
             status: "success"

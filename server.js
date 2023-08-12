@@ -9,7 +9,7 @@ import categoryRouter from "./src/routers/categoryRouter.js";
 import paymentOptionRouter from "./src/routers/paymentOptionRouter.js";
 import { auth } from './src/middleware/authMiddleware.js';
 import productRouter from "./src/routers/productRouter.js";
-import { path } from "path";
+import path from "path";
 
 const PORT = process.env.PORT || 8000
 
@@ -34,7 +34,7 @@ app.use("/api/v1/payment-option", auth, paymentOptionRouter);
 app.use("/api/v1/product", auth, productRouter)
 
 // default apis
-app.use("/", (req, res) =>{
+app.get("/", (req, res) =>{
     res.json({
         status: "success",
         message: "Server running well"
