@@ -1,4 +1,4 @@
-import { getAdminByEmail,getOneAdmin } from "../modles/admin/AdminModel.js"
+import { getAdminByEmail } from "../modles/admin/AdminModel.js"
 import { createAcessJWT, verifyAccessJWT, verifyRefreshJWT } from "../utils/jwt.js"
 
 

@@ -2,6 +2,8 @@ import Joi from 'joi'
 
 const SHORTSTR = Joi.string().min(3).max(100)
 const  SHORTSTRREQ = Joi.string().min(3).max(100).required();
+const NUM = Joi.number()
+const NUMREQ = Joi.number().required()
 
 // =========== admin ==========
 export const newAdminValidation = (req, res, next) =>{
@@ -120,6 +122,31 @@ export const newPOValidation = (req, res, next) =>{
             message:error.message
         })
         : next()
+
+    } catch (error) {
+        next(error)
+    }
+}
+
+// ========= Product Validation =======
+
+export const newProductValidation = (req, res, next) =>{
+    try {
+
+        req.body.salesPrice = req.body.salesPrice || 0;
+        
+        const schema = Joi.object({
+            name: SHORTSTRREQ,
+            sku: SHORTSTRREQ,
+            parentCat: SHORTSTRREQ,
+            status: SHORTSTRREQ,
+            salesPrice: NUM,
+            price: NUMREQ,
+            qty: NUMREQ,
+            description: SHORTSTRREQ,
+            salesEndDate: SHORTSTR.allow("", null),
+            salesStartDate: SHORTSTR.allow("", null)
+        })
 
     } catch (error) {
         next(error)

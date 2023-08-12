@@ -5,7 +5,7 @@ import { getAdminByEmail, insertAdmin, updateAdmin, updateAdminById } from "../m
 import { accountVerificationEmail, accountVerifiedNotification } from "../utils/nodeMailer.js";
 import { v4 as uuidv4 } from 'uuid';
 import { createAcessJWT, createRefreshJWT } from "../utils/jwt.js";
-import { auth } from '../middleware/authMiddleware.js';
+import { auth, refreshAuth } from '../middleware/authMiddleware.js';
 import { deleteSession } from '../modles/session/SessionModel.js';
 
 

@@ -1,6 +1,6 @@
 import express from 'express'
 import { getPOs, insertPO } from '../modles/payment-option/PaymentModel.js';
-import { newPOValidation } from '../middleware/joiValidation.js';
+import { updatePOValidation } from "../middleware/joiValidation.js";
 
 const router = express.Router();
 
@@ -41,7 +41,7 @@ router.post("/", async (req, res, next) =>{
     }
 })
 
-router.put("/", upadteCategoryValidation,  async (req, res, next) =>{
+router.put("/", updatePOValidation,  async (req, res, next) =>{
     try {
         const result = await updateCategoryByID(req.body)
 
