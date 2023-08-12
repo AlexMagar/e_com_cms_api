@@ -1,7 +1,7 @@
 import ProductSchema from "./ProductSchema.js";
 
 export const insertProduct = (obj) =>{
-    return productSchema(obj).save();
+    return ProductSchema(obj).save();
 }
 
 export const getProducts = () =>{

@@ -148,6 +148,15 @@ export const newProductValidation = (req, res, next) =>{
             salesStartDate: SHORTSTR.allow("", null)
         })
 
+        const { error } = schema.validate(req.body)
+
+        error
+        ? res.json({
+            status: "error",
+            message: error.message
+        })
+        : next();
+
     } catch (error) {
         next(error)
     }

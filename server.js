@@ -9,6 +9,7 @@ import categoryRouter from "./src/routers/categoryRouter.js";
 import paymentOptionRouter from "./src/routers/paymentOptionRouter.js";
 import { auth } from './src/middleware/authMiddleware.js';
 import productRouter from "./src/routers/productRouter.js";
+import { path } from "path";
 
 const PORT = process.env.PORT || 8000
 
@@ -22,6 +23,9 @@ app.use(express.json()) //to receive the data send as json
 app.use(cors());
 app.use(morgan('dev'))
 
+const __dirname = path.resolve() //get root path
+//converting public folder to static serving folder
+app.use(express.static(path.join(__dirname, "/public")))
 
 //apis
 app.use("/api/v1/admin", adminRouter)
