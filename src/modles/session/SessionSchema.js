@@ -5,7 +5,7 @@ const sessionSchema = new mongoose.Schema({
         type: String,
         required: true
     },
-    assoiciate:{
+    associate:{
         type: String,
         required: true,
         default: "",

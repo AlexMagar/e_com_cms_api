@@ -51,6 +51,7 @@ app.use((error, req, res, next) =>{
 
 // PORT listen
 app.listen(PORT, (err) =>{
+    console.log(err)
     err 
     ? console.log(err.message)
     : console.log(`Server running at http://localhost:${PORT}`)

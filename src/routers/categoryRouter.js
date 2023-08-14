@@ -64,7 +64,7 @@ router.put("/", upadteCategoryValidation,  async (req, res, next) =>{
         result?._id
             ? res.json({
                 status: "success",
-                message: "New category has been added",
+                message: "The category has been added",
             })
             : res.json({
                 status: "error",

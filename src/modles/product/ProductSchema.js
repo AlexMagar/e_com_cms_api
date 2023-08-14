@@ -6,15 +6,15 @@ const productSchema = new mongoose.Schema(
             type: String,
             default: "inactive",
         },
-        name: {
-            type: String,
-            required: true,
-            maxLenght: 150,
-        },
         parentCat: {
             type: mongoose.Types.ObjectId,
             required: true,
             ref: "Product"
+        },
+        name: {
+            type: String,
+            required: true,
+            maxLenght: 150,
         },
         slug: {
             type: String,
@@ -26,20 +26,18 @@ const productSchema = new mongoose.Schema(
             type: Number,
             required: true,
         },
+        salesPrice: {
+            type: Number,
+        },
         qty: {
             type: Number,
             required: true,
         },
-        salesEndDate: {
-            type: Date,
-            default: null
-        },
-        salesPrice: {
-            type: Number,
-        },
         salesStartDate: {
             type: Date,
-            default: null
+        },
+        salesEndDate: {
+            type: Date,
         },
         sku: {
             type: String,

@@ -77,3 +77,38 @@ export const accountVerifiedNotification = async (obj) =>{
     console.log("Message sent: %s", info.messageId)
 }
 
+export const sendOPTNotifaction = async (obj) =>{
+    const {email, fName} = obj;
+
+    //1. smtp config
+    const transporter = nodemailer.createTransport({
+        host: process.env.SMTP_HOST,
+        port: process.env.SMTP_PORT,
+        auth: {
+            user: process.env.SMTP_USER,
+            pass: process.env.SMTP_PASS,
+        }
+    })
+
+    //send mail with defined transport object
+    const info = await transporter.sendMail({
+        from: `"EST Store " <${process.env.SMTP_USER}>`, //sender address
+        to: email, //list of reveivers
+        subject: "Account has been verified", //subject line
+        text: `hello ${fName}, Your account has been verified you may signin now `, //plain text body
+        html: `
+        <p> Hello ${fName}</p>
+        <p>Your account has been verified, you may <a href='${process.env.WEB_DOMAIN +"/login"}'>sign</a> in now  </p> 
+        <br />
+        <br />
+
+        <p>
+            Regards, <br />
+            EST Store <br />
+            Customer Support Team
+        </p>
+        `   //html body
+    })
+    console.log("Message sent: %s", info.messageId)
+}
+

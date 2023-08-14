@@ -135,7 +135,7 @@ router.post("/login", loginValidation, async (req, res, next) =>{
                 return res.json({
                     status: "Success",
                     message: "Logedin Successfully",
-                    token: {accessJWT, refreshJWT}
+                    token: {accessJWT, refreshJWT},
                 })
             }
         }

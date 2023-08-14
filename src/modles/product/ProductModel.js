@@ -17,7 +17,7 @@ export const findOneProductByFilter = (filter) =>{
 }
 
 export const updateProductByID = ({_id, ...rest}) =>{
-    return ProductSchema.findByIdAndUpdate(_id, rest)
+    return ProductSchema.findByIdAndUpdate(_id, rest, {new: true})
 }
 
 //@filter, @updateobj must be an obj

@@ -59,7 +59,7 @@ export const newAdminVerificationValidation = (req, res, next) =>{
     try {
         //define the schema
         const schema = Joi.object({
-            email: SHORTSTRREQ.email({minDomainSegments: 2}).required(),
+            email: SHORTSTRREQ.email({minDomainSegments: 2}),
             code: SHORTSTRREQ,
         })
 
@@ -128,6 +128,7 @@ export const newPOValidation = (req, res, next) =>{
         next(error)
     }
 }
+
 export const updatePOValidation = (req, res, next) =>{
     try {
         //define the schema
@@ -159,6 +160,7 @@ export const newProductValidation = (req, res, next) =>{
 
         req.body.salesPrice = req.body.salesPrice || 0;
         
+        //define the schema
         const schema = Joi.object({
             status: SHORTSTRREQ,
             name: SHORTSTRREQ,
@@ -170,6 +172,50 @@ export const newProductValidation = (req, res, next) =>{
             description: LONGTSTR,
             salesStartDate: SHORTSTR.allow("", null),
             salesEndDate: SHORTSTR.allow("", null),
+        })
+
+        const { error } = schema.validate(req.body)
+
+        error
+        ? res.json({
+            status: "error",
+            message: error.message
+        })
+        : next();
+
+    } catch (error) {
+        next(error)
+    }
+}
+
+
+export const updateProductValidation = (req, res, next) =>{
+    try {
+
+        req.body.salesPrice = req.body.salesPrice || 0;
+        req.body.salesStartDate = req.body.salesStartDate === 'null' || !req.body.salesStartDate 
+        ? null
+        : req.body.salesStartDate
+
+        req.body.salesEndDate = req.body.salesEndDate === "null" || !req.body.salesEndDate
+        ? null
+        : req.body.salesEndDate
+        
+
+        //define the schema
+        const schema = Joi.object({
+            _id: SHORTSTRREQ,
+            status: SHORTSTRREQ,
+            name: SHORTSTRREQ,
+            parentCat: SHORTSTRREQ,
+            price: NUMREQ,
+            qty: NUMREQ,
+            salesPrice: NUM,
+            description: LONGTSTR,
+            salesStartDate: SHORTSTR.allow("", null),
+            salesEndDate: SHORTSTR.allow("", null),
+            images: LONGTSTR.allow(""),
+            thumbnail: LONGTSTR.allow(""),
         })
 
         const { error } = schema.validate(req.body)
