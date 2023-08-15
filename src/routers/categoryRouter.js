@@ -64,11 +64,11 @@ router.put("/", upadteCategoryValidation,  async (req, res, next) =>{
         result?._id
             ? res.json({
                 status: "success",
-                message: "The category has been added",
+                message: "The category has been updated",
             })
             : res.json({
                 status: "error",
-                message: "Error, unable to add new category"
+                message: "Error, unable to  update new category"
             })
 
     } catch (error) {
