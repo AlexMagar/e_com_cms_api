@@ -2,12 +2,13 @@ import express, { json } from 'express'
 import { compairPassword, hashPassword } from "../utils/bcrypt.js";
 import { newAdminValidation, newAdminVerificationValidation, loginValidation } from "../middleware/joiValidation.js";
 import { getAdminByEmail, insertAdmin, updateAdmin, updateAdminById } from "../modles/admin/AdminModel.js"
-import { accountVerificationEmail, accountVerifiedNotification } from "../utils/nodeMailer.js";
+import { accountVerificationEmail, accountVerifiedNotification, sendOPTNotifaction } from "../utils/nodeMailer.js";
 import { v4 as uuidv4 } from 'uuid';
 import { createAcessJWT, createRefreshJWT } from "../utils/jwt.js";
 import { auth, refreshAuth } from '../middleware/authMiddleware.js';
-import { deleteSession } from '../modles/session/SessionModel.js';
+import { deleteSession, insertSession } from '../modles/session/SessionModel.js';
 import { token } from 'morgan';
+import { otpGenerator } from '../utils/randomGenerator.js';
 
 
 const router = express.Router();
@@ -165,6 +166,104 @@ router.post("/logout", async (req, res, next)=>{
             status: "success"
         })
 
+    } catch (error) {
+        next(error)
+    }
+})
+
+// ====== reseting password ======
+router.post("/request-opt", async (req, res, next) =>{
+    try {
+        const {email} = req.body
+
+        console.log(email)
+
+        if(email) {
+            //check user exit
+
+            const user = await getAdminByEmail(email);
+
+            if(user?._id){
+                //create 6 digit otp and store in session with email
+                const otp = otpGenerator()
+
+                //store otp and email in session table for future check
+
+                const obj = {
+                    token: otp,
+                    associate: email,
+                }
+
+                const result = await insertSession(obj)
+
+                if(result?._id) {
+                    //send opt to their email
+                    await sendOPTNotifaction({
+                        otp,
+                        email,
+                        fName: user.fName
+                    })
+                }
+            }
+        }
+
+        res.json({
+            status: "success",
+            message:" If your email exits in our system, you will get otp to your mailbox. Please check your email for the instruction and otp"
+
+        })
+    } catch (error) {
+        next(error)
+    }
+})
+
+router.post("/reset-password", async (req, res, next) =>{
+    try {
+        const { email, password, otp} = req.body
+
+        if(email && password){
+            //check if the token is valid
+
+            const result = await deleteSessionByFilter({
+                token: otp,
+                associate: email,
+            })
+
+            if(result?._id){
+                //check user exist
+
+                const user = await getAdminByEmail(email)
+
+                if(user?._id){
+                    //encrypt the password
+
+                    const hashPass = hashPassword(password)
+
+                    const updatedUser = await updateAdmin(
+                        {email},
+                        {password: hashPass}
+                    )
+
+                    if(updatedUser?._id){
+                        //send email notifaction
+
+                        await passwordChangedNotification({
+                            email, 
+                            fName: updatedUser.fName,
+                        })
+
+                        return res.json({
+                            status: "success",
+                            message: " Your password has been updated, you may login now."
+                        })
+                    }
+                }
+            }
+        }
+        res.json({
+            status: "error",
+            message: "Invalid request or token"
+        })
     } catch (error) {
         next(error)
     }
