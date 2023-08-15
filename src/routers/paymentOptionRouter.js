@@ -68,7 +68,7 @@ router.delete("/:_id", async (req, res, next) =>{
             result?._id && 
             res.json({
                 status: "success",
-                message: "The category has been deleted"
+                message: "The Payment options has been deleted"
             })
             return
         }
