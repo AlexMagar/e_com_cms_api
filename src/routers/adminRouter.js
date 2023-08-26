@@ -15,6 +15,7 @@ const router = express.Router();
 
 //get admin details
 router.get("/", auth, (req, res, next) =>{
+    console.log("first in admin Router.......")
     try {
         res.json({
             status: "success",
@@ -134,7 +135,7 @@ router.post("/login", loginValidation, async (req, res, next) =>{
                 // create accessJWT and store in session table: short live 15
                 // create accessJWT / refereshJWT ans store with user data in user table : long live 30d
                 return res.json({
-                    status: "Success",
+                    status: "success",
                     message: "Logedin Successfully",
                     token: {accessJWT, refreshJWT},
                 })
