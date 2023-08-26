@@ -1,4 +1,4 @@
-import { getAdminByEmail } from "../modles/admin/AdminModel.js"
+import { getAdminByEmail, getOneAdmin } from "../modles/admin/AdminModel.js"
 import { createAcessJWT, verifyAccessJWT, verifyRefreshJWT } from "../utils/jwt.js"
 
 
@@ -7,11 +7,10 @@ export const auth = async (req, res, next) =>{
 
         //1. get the accessJWT
         const {authorization} = req.headers
-        console.log(authorization)
 
         //2. decode the jwt
         const decoded = verifyAccessJWT(authorization)
-        console.log(decoded)
+     
 
         //2a TODO make sure token exist in database
 
@@ -19,7 +18,7 @@ export const auth = async (req, res, next) =>{
         if(decoded?.email){
             //4. check if user is active
             const user = await getAdminByEmail(decoded.email)
-            console.log(user)
+            
 
             if(user?._id && user?.status === "active"){
                 user.refreshJWT = undefined
@@ -54,7 +53,7 @@ export const refreshAuth = async (req, res, next) =>{
   
           //2. decode the jwt
           const decoded = verifyRefreshJWT(authorization)
-          console.log(decoded)
+          console.log("Here is my decoded email: authMiddleware ",decoded)
 
           //make sure data is in 
   
