@@ -1,7 +1,7 @@
 import express, { json } from 'express'
 import { compairPassword, hashPassword } from "../utils/bcrypt.js";
 import { newAdminValidation, newAdminVerificationValidation, loginValidation } from "../middleware/joiValidation.js";
-import { getAdminByEmail, insertAdmin, updateAdmin, updateAdminById } from "../modles/admin/AdminModel.js"
+import { getAdminByEmail, getAllAdmin, insertAdmin, updateAdmin, updateAdminById } from "../modles/admin/AdminModel.js"
 import { accountVerificationEmail, accountVerifiedNotification, sendOPTNotifaction } from "../utils/nodeMailer.js";
 import { v4 as uuidv4 } from 'uuid';
 import { createAcessJWT, createRefreshJWT } from "../utils/jwt.js";
@@ -15,12 +15,24 @@ const router = express.Router();
 
 //get admin details
 router.get("/", auth, (req, res, next) =>{
-    console.log("first in admin Router.......")
     try {
         res.json({
             status: "success",
             message: " here is the user Info",
             user: req.userInfo,
+        })
+    } catch (error) {
+        next(error)
+    }
+})
+
+router.get("/display", auth, async (req, res, next) =>{
+    try {
+        const user = await getAllAdmin()
+        res.json({
+            status: "success",
+            message: " here is the user Info",
+            user,
         })
     } catch (error) {
         next(error)
@@ -270,5 +282,10 @@ router.post("/reset-password", async (req, res, next) =>{
     }
 })
 
+
+// update profile
+router.put("/profile", newAdminValidation, async (req, res, next) => {
+
+})
 
 export default router;
