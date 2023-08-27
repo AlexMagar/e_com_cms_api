@@ -9,6 +9,10 @@ export const getAdminByEmail = (email) =>{
     return AdminSchema.findOne({email});
 }
 
+export const getAdminById = (_id) =>{
+    return AdminSchema.findOne({_id})
+}
+
 export const getOneAdmin = (filter) =>{
     return AdminSchema.findOne({filter});
 }
