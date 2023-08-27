@@ -1,13 +1,12 @@
 import express, { json } from 'express'
 import { compairPassword, hashPassword } from "../utils/bcrypt.js";
 import { newAdminValidation, newAdminVerificationValidation, loginValidation } from "../middleware/joiValidation.js";
-import { getAdminByEmail, getAllAdmin, insertAdmin, updateAdmin, updateAdminById } from "../modles/admin/AdminModel.js"
+import { getAdminByEmail, getAdminById, getAllAdmin, insertAdmin, updateAdmin, updateAdminById } from "../modles/admin/AdminModel.js"
 import { accountVerificationEmail, accountVerifiedNotification, sendOPTNotifaction } from "../utils/nodeMailer.js";
 import { v4 as uuidv4 } from 'uuid';
 import { createAcessJWT, createRefreshJWT } from "../utils/jwt.js";
 import { auth, refreshAuth } from '../middleware/authMiddleware.js';
 import { deleteSession, insertSession } from '../modles/session/SessionModel.js';
-import { token } from 'morgan';
 import { otpGenerator } from '../utils/randomGenerator.js';
 
 
@@ -117,9 +116,8 @@ router.post("/admin-verification", newAdminVerificationValidation, async (req, r
 
 //check admin login 
 router.post("/login", loginValidation, async (req, res, next) =>{
-    try {
 
-        console.log("Admin Router: ",req.body)
+    try {
         //get the data from login form 
         const {email, password} = req.body;
 
@@ -128,12 +126,9 @@ router.post("/login", loginValidation, async (req, res, next) =>{
 
 
         if(user?._id){
-            console.log("User found")
 
             //use bcrypt to check if the pw is matching
             const isMatch = compairPassword(password, user.password)
-
-            console.log("admin router, ", isMatch)
 
             if(isMatch){
                 // user.password = undefined
@@ -143,7 +138,6 @@ router.post("/login", loginValidation, async (req, res, next) =>{
                 const accessJWT = await createAcessJWT(email)
                 const refreshJWT = await createRefreshJWT(email)
 
-                console.log("admin Router, login", accessJWT, refreshJWT)
                 // create accessJWT and store in session table: short live 15
                 // create accessJWT / refereshJWT ans store with user data in user table : long live 30d
                 return res.json({
@@ -284,8 +278,68 @@ router.post("/reset-password", async (req, res, next) =>{
 
 
 // update profile
-router.put("/profile", newAdminValidation, async (req, res, next) => {
+router.put("/profile", async (req, res, next) => {
+    console.log("From the  admin router profile put: ",req.body)
+
+    try {
+
+        const {_id, password, ...rest} = req.body 
+
+        req.body.password = hashPassword(password)
+
+        const user = await getAdminById(_id)
+
+        if( user?._id){
+            const isMatch = compairPassword(password, user.password)
+            console.log("firrst: ", isMatch)
+            if(isMatch){
+                console.log("second")
+                const result = await updateAdminById({_id, ...rest})
+                console.log("third")
+                result?._d && console.log("Success")
+            }
+            res.json({
+                status: "success",
+                message: "Profile is successfully updated"
+            })
+        }        
+    } catch (error) {
+        next(error)
+    }
 
 })
 
+router.put("/profilePassword", async (req, res, next) => {
+    const lg = req.body
+    console.log("From the  admin router profile put: ",lg)
+
+    try {
+
+        const {_id, newPassword, currentPassword} = req.body 
+
+        const password = hashPassword(newPassword)
+
+        console.log("hello: ", req.body.newPassword)
+
+        const user = await getAdminById(_id)
+
+        if( user?._id){
+            const isMatch = compairPassword(currentPassword, user.password)
+            console.log("firrst: ", isMatch)
+            if(isMatch){
+                console.log("second")
+                const result = await updateAdminById({_id, password})
+                console.log("third")
+                result?._id && console.log("Success")
+            }
+            res.json({
+                status: "success",
+                message: "Profile is successfully updated"
+            })
+        }        
+    } catch (error) {
+        next(error)
+    }
+
+})
 export default router;
