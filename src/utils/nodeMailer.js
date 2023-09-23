@@ -35,7 +35,7 @@ export const accountVerificationEmail = async (obj) =>{
         EST Store <br/>
         Customer Support Team
     </p>
-    
+     
     `, // html body
   });
 
