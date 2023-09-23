@@ -4,7 +4,7 @@ import { insertSession } from '../modles/session/SessionModel.js'
 
 export const createAcessJWT = async (email) =>{
     const token =  jwt.sign({email}, process.env.JWT_ACCESS_SECRET, {
-        expiresIn: "15m"
+        expiresIn: "60m"
     })
     console.log("Jwt createAccessToken: ", token)
     await insertSession({token, associate: email})
