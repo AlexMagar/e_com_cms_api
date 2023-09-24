@@ -1,7 +1,9 @@
 import Joi from 'joi'
 
 const SHORTSTR = Joi.string().min(3).max(100)
+const LONGTSTR = Joi.string().min(5).max(200)
 const  SHORTSTRREQ = Joi.string().min(3).max(100).required();
+const  LONGTSTRREQ = Joi.string().min(5).max(200).required();
 const NUM = Joi.number()
 const NUMREQ = Joi.number().required()
 
@@ -169,7 +171,7 @@ export const newProductValidation = (req, res, next) =>{
             price: NUMREQ,
             qty: NUMREQ,
             salesPrice: NUM,
-            description: LONGTSTR,
+            description: SHORTSTRREQ,
             salesStartDate: SHORTSTR.allow("", null),
             salesEndDate: SHORTSTR.allow("", null),
         })
